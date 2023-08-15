@@ -179,11 +179,16 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
         var searchResults = new List<MovieSearchResult>();
         if (string.IsNullOrWhiteSpace(pid.Id) || string.IsNullOrWhiteSpace(pid.Provider))
         {
-            // Search movie by OriginalTitle.
-            Logger.Info("Search for movie: {0}", info.OriginalTitle);
-            searchResults.AddRange(await ApiClient.SearchMovieAsync(info.OriginalTitle, pid.Provider, cancellationToken));
+            if (info.OriginalTitle != null)
+            {
+                // Search movie by OriginalTitle.
+                Logger.Info("Search for movie: {0}", info.OriginalTitle);
+                searchResults.AddRange(await ApiClient.SearchMovieAsync(info.OriginalTitle, pid.Provider, cancellationToken));
+            }
             if (!searchResults.Any())
             {
+                // Search movie by Name.
+                Logger.Info("Search for movie: {0}", info.Name);
                 searchResults.AddRange(await ApiClient.SearchMovieAsync(info.Name, pid.Provider, cancellationToken));
             }
         }
