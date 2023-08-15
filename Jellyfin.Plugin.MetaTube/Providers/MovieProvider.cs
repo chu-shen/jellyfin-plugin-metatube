@@ -182,6 +182,10 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
             // Search movie by name.
             Logger.Info("Search for movie: {0}", info.Name);
             searchResults.AddRange(await ApiClient.SearchMovieAsync(info.Name, pid.Provider, cancellationToken));
+            if (!searchResults.Any())
+            {
+                searchResults.AddRange(await ApiClient.SearchMovieAsync(info.OriginalTitle, pid.Provider, cancellationToken));
+            }
         }
         else
         {
